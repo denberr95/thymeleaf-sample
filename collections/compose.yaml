@@ -1,0 +1,57 @@
+services:
+  springdb:
+    image: postgres:latest
+    restart: "no"
+    hostname: springdb
+    environment:
+    - POSTGRES_USER=admin
+    - POSTGRES_PASSWORD=
+    - POSTGRES_DB=thymeleaf
+    - POSTGRES_HOST_AUTH_METHOD=trust
+    - TZ=Europe/Rome
+    volumes:
+    - ./database/scripts:/docker-entrypoint-initdb.d/
+    ports:
+    - "5432:5432" # serve database
+    networks:
+    - vscode-thymeleaf
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    restart: "no"
+    hostname: keycloak
+    environment:
+    - TZ=Europe/Rome
+    - KC_BOOTSTRAP_ADMIN_USERNAME=kcuser # Temporary admin user, real is "admin"
+    - KC_BOOTSTRAP_ADMIN_PASSWORD=kcpwd # Temporary admin user pwd, real is "admin"
+    - JAVA_OPTS_KC_HEAP=-XX:MaxRAMPercentage=70 -XX:MinRAMPercentage=70 -XX:InitialRAMPercentage=50
+    command:
+    - start-dev
+    volumes:
+    - ./keycloak:/opt/keycloak/data
+    ports:
+    - "8080:8080" # serve web server
+    networks:
+    - vscode-thymeleaf
+
+  mailpit:
+    image: axllent/mailpit
+    restart: "no"
+    hostname: mailpit
+    environment:
+    - TZ=Europe/Rome
+    - MP_MAX_MESSAGES=5000
+    - MP_DATABASE=/data/mailpit.db
+    - MP_SMTP_AUTH_ACCEPT_ANY=1
+    - MP_SMTP_AUTH_ALLOW_INSECURE=1
+    volumes:
+    - ./mailpit/data:/data
+    ports:
+    - "8025:8025" # serve web ui
+    - "1025:1025" # serve smtp server
+    networks:
+    - vscode-thymeleaf
+
+networks:
+  vscode-thymeleaf:
+    driver: bridge

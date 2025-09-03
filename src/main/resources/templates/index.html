@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Home Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+
+    <body>
+        <div class="content">
+            <h1>Benvenuto nella Home</h1>
+            <p>Questa è la pagina principale.</p>
+        </div>
+        <div class="container">
+            <nav class="sidebar">
+                <ul>
+                    <li><a th:href="@{/home}">Home</a></li>
+                    <li><a th:href="@{/books}">Libri</a></li>
+                </ul>
+            </nav>
+        </div>
+    </body>
+
+</html>
